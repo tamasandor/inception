@@ -1,0 +1,33 @@
+services:
+    nginx:
+        build: ./srcs/requirements/nginx
+        ports:
+        - "443:443"
+        env_file:
+            - .env
+        volumes:
+            - www-pages:/var/www/html
+        restart: always
+    wordpress:
+        depends_on:
+            - nginx
+            - database
+        build: ./srcs/requirements/wordpress
+        volumes:
+            - db:/var/lib/mysql
+            - www-pages:/var/www/html
+        env_file:
+            - .env
+        restart: always
+    database:
+        build: ./srcs/requirements/database
+        volumes:
+            - db:/var/lib/mysql
+        env_file:
+            - .env
+        expose:
+            - "3306"
+        restart: always
+volumes:
+    db:
+    www-pages:
