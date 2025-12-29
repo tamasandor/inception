@@ -28,7 +28,6 @@ CREATE DATABASE IF NOT EXISTS $MYSQL_NAME;
 CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
 
 GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO '${MYSQL_USER}'@'%';
-# GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO 'user'@'%';
 
 FLUSH PRIVILEGES;
 EOSQL
@@ -36,9 +35,9 @@ EOSQL
 
     # Shut down the temporary server
     mariadb-admin -u root -p'your_password' shutdown
+    sed -i "s/skip-networking/# skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
 fi
 
-sed -i "s/skip-networking/# skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
 
 # 2. Start the actual server in the foreground
 echo "Starting MariaDB..."

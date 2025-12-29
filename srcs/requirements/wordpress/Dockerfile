@@ -4,7 +4,8 @@ RUN apk update && apk upgrade && \
         apk add php83-fpm && \ 
         apk add php83-mysqli && \
         apk add php && apk add php-phar && \
-        apk add php83-mbstring
+        apk add php83-mbstring && \
+        apk add mysql-client
 
 RUN mkdir -p /usr/share/webapps/
 WORKDIR /usr/share/webapps

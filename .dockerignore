@@ -2,5 +2,6 @@
 .git
 .dockerignore
 docker-compose.yml
+env.example
 Makefile
 *.md
