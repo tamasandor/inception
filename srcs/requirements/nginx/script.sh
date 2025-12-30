@@ -1,16 +1,24 @@
 #!/bin/sh
 
-echo Replacing __DOMAIN_NAME__ to $DOMAIN_NAME
 
-sed -i "s/__DOMAIN_NAME__/$DOMAIN_NAME/g" /etc/nginx/nginx.conf
+if [ ! -e .flag ]; then
+    echo didnt find .flag
+    echo Replacing __DOMAIN_NAME__ to $DOMAIN_NAME
 
-openssl req -newkey rsa:4096 \
-            -x509 \
-            -sha256 \
-            -days 365 \
-            -nodes \
-            -out 42.crt \
-            -keyout 42.key \
-            -subj "/CN=$DOMAIN_NAME"
+    sed -i "s/__DOMAIN_NAME__/$DOMAIN_NAME/g" /etc/nginx/nginx.conf
+
+    openssl req -newkey rsa:4096 \
+                -x509 \
+                -sha256 \
+                -days 365 \
+                -nodes \
+                -out 42.crt \
+                -keyout 42.key \
+                -subj "/CN=$DOMAIN_NAME"
+
+    touch .flag
+else
+    echo exists
+fi
 
 exec nginx -g "daemon off;"

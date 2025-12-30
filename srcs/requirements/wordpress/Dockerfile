@@ -5,17 +5,13 @@ RUN apk update && apk upgrade && \
         apk add php83-mysqli && \
         apk add php && apk add php-phar && \
         apk add php83-mbstring && \
-        apk add mysql-client
+        apk add mariadb-client
 
-RUN mkdir -p /usr/share/webapps/
-WORKDIR /usr/share/webapps
-RUN wget https://wordpress.org/latest.tar.gz
-RUN tar -xzvf latest.tar.gz
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
+        chmod +x wp-cli.phar && \
+        mv wp-cli.phar /usr/local/bin/wp
 
-# set up wp cli
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp
+
 
 ADD ./script.sh ./script.sh
 

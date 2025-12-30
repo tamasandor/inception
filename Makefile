@@ -7,7 +7,8 @@ all:
 down:
 	docker compose down
 
-up: all
+up:
+	docker compose up -d
 
 fclean: down
 	docker system prune --all --force --volumes

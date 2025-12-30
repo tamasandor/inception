@@ -19,7 +19,6 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     done
 
     # Set the root password and create the wordpress database
-    echo $MYSQL_USER $MYSQL_PASSWORD
   mariadb -u root <<EOSQL
 ALTER USER 'root'@'localhost' IDENTIFIED BY 'your_password';
 
