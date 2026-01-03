@@ -5,7 +5,8 @@ RUN apk update && apk upgrade && \
         apk add php83-mysqli && \
         apk add php && apk add php-phar && \
         apk add php83-mbstring && \
-        apk add mariadb-client
+        apk add mariadb-client && \
+        apk add php83-gd
 
 RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
         chmod +x wp-cli.phar && \
