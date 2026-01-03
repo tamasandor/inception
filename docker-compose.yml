@@ -1,5 +1,7 @@
 services:
     nginx:
+        depends_on:
+            - wordpress
         build: ./srcs/requirements/nginx
         ports:
         - "443:443"
@@ -7,17 +9,19 @@ services:
             - .env
         volumes:
             - www-pages:/var/www/html
+        networks:
+            - website
         restart: always
     wordpress:
         depends_on:
-            - nginx
             - database
         build: ./srcs/requirements/wordpress
         volumes:
-            - db:/var/lib/mysql
             - www-pages:/var/www/html
         env_file:
             - .env
+        networks:
+            - website
         restart: always
     database:
         build: ./srcs/requirements/database
@@ -27,12 +31,29 @@ services:
             - .env
         expose:
             - "3306"
-        restart: always
         healthcheck:
             test: ["CMD", "mariadb-admin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
             interval: 10s
             timeout: 5s
             retries: 5
+        networks:
+            - website
+        restart: always
+
 volumes:
     db:
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/$USER/data/data_db
+            o: bind
     www-pages:
+        driver: local
+        driver_opts:
+            type: none
+            device: /home/$USER/data/data_wp
+            o: bind
+
+networks:
+    website:
+        driver: bridge
