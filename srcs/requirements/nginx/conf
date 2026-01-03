@@ -11,6 +11,9 @@ http {
     include /etc/nginx/mime.types;
     default_type application/octet-stream;
 
+    # Docker DNS resolver (CRITICAL)
+    resolver 127.0.0.11 valid=30s;
+
     # Logging
     log_format main '$remote_addr - $remote_user [$time_local] "$request" '
                     '$status $body_bytes_sent "$http_referer" '
@@ -21,7 +24,7 @@ http {
     sendfile on;
     tcp_nopush on;
     server_tokens off;
-    client_max_body_size 64M; # Increased for WordPress uploads
+    client_max_body_size 64M;
 
     # SSL Global Settings
     ssl_protocols TLSv1.2 TLSv1.3;
@@ -41,11 +44,9 @@ http {
         listen 443 ssl;
         server_name __DOMAIN_NAME__;
 
-        # SSL Certificates (Must exist in the Nginx container)
         ssl_certificate     42.crt;
         ssl_certificate_key 42.key;
 
-        # Web Root (Must match path in both Nginx and PHP containers)
         root /var/www/html;
         index index.php index.html;
 
@@ -54,23 +55,21 @@ http {
             try_files $uri $uri/ /index.php?$args;
         }
 
-        # PHP-FPM Configuration
+        # PHP-FPM
         location ~ \.php$ {
-            # Check if file exists before passing to PHP
             try_files $uri =404;
-            
-            # FastCGI Settings
-            # 'wordpress' must match the service name in docker-compose.yml
-            fastcgi_pass wordpress:9000; 
+
             fastcgi_index index.php;
             include fastcgi_params;
-            
-            # Critical: This path MUST be where files live inside the PHP container
+
+            # Use variable to force runtime DNS resolution
+            set $php_upstream __WORDPRESS_CONTAINER_NAME__:9000;
+            fastcgi_pass $php_upstream;
+
             fastcgi_param SCRIPT_FILENAME /var/www/html$fastcgi_script_name;
-            fastcgi_param PATH_INFO $fastcgi_path_info;
         }
 
-        # Security: Deny access to .htaccess or hidden files
+        # Security
         location ~ /\. {
             deny all;
         }

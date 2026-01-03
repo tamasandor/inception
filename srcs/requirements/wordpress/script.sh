@@ -3,10 +3,10 @@
 cd /var/www/html
 
 sed -i 's/memory_limit = 128M/memory_limit = 256M/' /etc/php83/php.ini
+echo Change listen to 0.0.0.0:9000
+sed -i "s/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g" /etc/php83/php-fpm.d/www.conf
 
 if [ ! -f /var/www/html/wp-config.php ]; then
-    echo Change listen to 0.0.0.0:9000
-    sed -i "s/listen = 127.0.0.1:9000/listen = 0.0.0.0:9000/g" /etc/php83/php-fpm.d/www.conf
     echo -e "\033[38;5;9mWordpress is not configured...\033[0m"
     echo -e "\033[38;5;10mConfiguring Wordpress...\033[0m"
     wp core download --locale=en_US --allow-root

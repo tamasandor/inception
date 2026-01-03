@@ -2,11 +2,14 @@
 
 
 if [ ! -e .flag ]; then
-    echo didnt find .flag
+    echo Initial set up doesn\'t exist. Setting up initial nginx config...
     echo Replacing __DOMAIN_NAME__ to $DOMAIN_NAME
 
     sed -i "s/__DOMAIN_NAME__/$DOMAIN_NAME/g" /etc/nginx/nginx.conf
+    echo Replacing __WORDPRESS_CONTAINER_NAME__ to $WORDPRESS_CONTAINER_NAME
+    sed -i "s/__WORDPRESS_CONTAINER_NAME__/$WORDPRESS_CONTAINER_NAME/g" /etc/nginx/nginx.conf
 
+    echo Setting up self signed certification...
     openssl req -newkey rsa:4096 \
                 -x509 \
                 -sha256 \
@@ -18,7 +21,8 @@ if [ ! -e .flag ]; then
 
     touch .flag
 else
-    echo exists
+    echo Initial configuration already exists.
 fi
 
+echo Starting nginx...
 exec nginx -g "daemon off;"

@@ -18,9 +18,9 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
         sleep 1
     done
 
-    # Set the root password and create the wordpress database
-  mariadb -u root <<EOSQL
-ALTER USER 'root'@'localhost' IDENTIFIED BY 'your_password';
+    # Set the root password and create the WordPress database
+    mariadb -u root <<EOSQL
+ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
 
 CREATE DATABASE IF NOT EXISTS $MYSQL_NAME;
 
@@ -31,13 +31,11 @@ GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO '${MYSQL_USER}'@'%';
 FLUSH PRIVILEGES;
 EOSQL
 
-
     # Shut down the temporary server
-    mariadb-admin -u root -p'your_password' shutdown
-    sed -i "s/skip-networking/# skip-networking/g" /etc/my.cnf.d/mariadb-server.cnf
-fi
+    mariadb-admin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
 
+fi
 
 # 2. Start the actual server in the foreground
 echo "Starting MariaDB..."
-exec mariadbd --user=mysql --datadir=/var/lib/mysql
+exec mariadbd --user=mysql --datadir=/var/lib/mysql --skip_networking=0
