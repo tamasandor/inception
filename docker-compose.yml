@@ -22,6 +22,10 @@ services:
             - .env
         networks:
             - website
+        secrets:
+            - wordpress_admin
+            - wordpress_user
+            - database_user
         restart: always
     database:
         build: ./srcs/requirements/database
@@ -36,6 +40,9 @@ services:
             retries: 5
         networks:
             - website
+        secrets:
+            - database_root
+            - database_user
         restart: always
 
 volumes:
@@ -55,3 +62,13 @@ volumes:
 networks:
     website:
         driver: bridge
+
+secrets:
+    database_root:
+        file: ./secrets/database_root.txt
+    database_user:
+        file: ./secrets/database_user.txt
+    wordpress_admin:
+        file: ./secrets/wordpress_admin.txt
+    wordpress_user:
+        file: ./secrets/wordpress_user.txt

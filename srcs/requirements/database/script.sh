@@ -20,11 +20,11 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
 
     # Set the root password and create the WordPress database
     mariadb -u root <<EOSQL
-ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';
+ALTER USER 'root'@'localhost' IDENTIFIED BY '$(cat /run/secrets/database_root)';
 
 CREATE DATABASE IF NOT EXISTS $MYSQL_NAME;
 
-CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '${MYSQL_PASSWORD}';
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED BY '$(cat /run/secrets/database_user)';
 
 GRANT ALL PRIVILEGES ON $MYSQL_NAME.* TO '${MYSQL_USER}'@'%';
 
@@ -32,7 +32,7 @@ FLUSH PRIVILEGES;
 EOSQL
 
     # Shut down the temporary server
-    mariadb-admin -u root -p${MYSQL_ROOT_PASSWORD} shutdown
+    mariadb-admin -u root -p$(cat /run/secrets/database_root) shutdown
 
 fi
 
