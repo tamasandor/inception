@@ -34,7 +34,7 @@ services:
         env_file:
             - .env
         healthcheck:
-            test: ["CMD", "mariadb-admin", "ping", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+            test: ["CMD", "mariadb-admin", "ping"]
             interval: 10s
             timeout: 5s
             retries: 5
