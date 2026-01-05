@@ -10,6 +10,8 @@ if [ ! -f /var/www/html/wp-config.php ]; then
     echo -e "\033[38;5;9mWordpress is not configured...\033[0m"
     echo -e "\033[38;5;10mConfiguring Wordpress...\033[0m"
     wp core download --locale=en_US --allow-root
+    # in case the database is unreachable
+    chmod -R 777 /var/www/html
 
 until mariadb -h"$DB_NAME" -u"$MYSQL_USER" -p"$(cat /run/secrets/database_user)" -e "SELECT 1" >/dev/null 2>&1; do echo trying connect to db && sleep 2; done
 
