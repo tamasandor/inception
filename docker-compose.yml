@@ -50,13 +50,13 @@ volumes:
         driver: local
         driver_opts:
             type: none
-            device: /home/$USER/data/data_db
+            device: /home/atamas/data/data_db
             o: bind
     www-pages:
         driver: local
         driver_opts:
             type: none
-            device: /home/$USER/data/data_wp
+            device: /home/atamas/data/data_wp
             o: bind
 
 networks:

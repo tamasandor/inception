@@ -36,6 +36,7 @@ EOSQL
 
 fi
 
+chmod -R 777 /var/lib/mysql
 # 2. Start the actual server in the foreground
 echo "Starting MariaDB..."
 exec mariadbd --user=mysql --datadir=/var/lib/mysql --skip_networking=0

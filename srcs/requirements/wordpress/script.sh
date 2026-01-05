@@ -16,7 +16,8 @@ until mariadb -h"$DB_NAME" -u"$MYSQL_USER" -p"$(cat /run/secrets/database_user)"
 
     wp config create --dbname="$MYSQL_NAME" --dbuser="$MYSQL_USER" --dbpass="$(cat /run/secrets/database_user)" --dbhost=$DB_NAME --allow-root
     wp core install --url=$DOMAIN_NAME --title=$WORDPRESS_TITLE --admin_user=$WORDPRESS_ADMIN --admin_password=$(cat /run/secrets/wordpress_admin) --admin_email=$WORDPRESS_EMAIL --skip-email --allow-root
-    wp user create $WP_USER  $WP_EMAIL --user_pass=$(cat /run/secrets/wordpress_user) --role=author
+    wp user create $WP_USER  $WP_EMAIL --allow-root --user_pass=$(cat /run/secrets/wordpress_user) --role=author
+    chmod -R 777 /var/www/html
 else
     echo Wordpress is already configured
     echo -e "\033[38;5;10m Continue\033[0m"
