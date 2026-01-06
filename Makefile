@@ -19,4 +19,4 @@ fclean: down
 
 re: down all
 
-.PHONY: all down up fclean
+.PHONY: all re down up fclean
