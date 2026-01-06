@@ -4,17 +4,17 @@ NAME = inception
 all:
 	mkdir -p /home/${USER}/data/data_db
 	mkdir -p /home/${USER}/data/data_wp
-	docker compose up -d --build
+	docker compose -p ${NAME} up -d --build
 
 down:
-	docker compose down
+	docker compose -p ${NAME} down
 
 up:
-	docker compose up -d
+	docker compose -p ${NAME} up -d
 
 fclean: down
+	docker volume rm -f ${NAME}_www-pages ${NAME}_db
 	docker system prune --all --force --volumes
-	docker volume rm inception_www-pages inception_db
 	rm -rf /home/${USER}/data
 
 re: down all

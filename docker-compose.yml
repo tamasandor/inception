@@ -4,7 +4,7 @@ services:
             - wordpress
         build: ./srcs/requirements/nginx
         ports:
-        - "443:443"
+            - "443:443"
         env_file:
             - .env
         volumes:
@@ -14,7 +14,8 @@ services:
         restart: always
     wordpress:
         depends_on:
-            - database
+            database:
+                condition: service_healthy
         build: ./srcs/requirements/wordpress
         volumes:
             - www-pages:/var/www/html
